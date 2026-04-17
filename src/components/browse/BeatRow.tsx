@@ -2,6 +2,7 @@ import { Play, Pause, ShoppingCart, MoreVertical, BadgeCheck } from "lucide-reac
 import artwork from "@/assets/beat-artwork.jpg";
 import { usePlayer } from "./PlayerContext";
 import MiniWaveform from "./MiniWaveform";
+import { PREVIEW_URL } from "./audio";
 
 export interface Beat {
   title: string;
@@ -70,7 +71,7 @@ const BeatRow = ({ beat }: { beat: Beat }) => {
             </a>
           ))}
         </div>
-        <MiniWaveform active={isActive} playing={showPause} />
+        <MiniWaveform url={PREVIEW_URL} active={isActive} playing={showPause} />
       </div>
 
       <div className="flex items-center gap-2">

@@ -1,25 +1,40 @@
+import { useEffect, useState } from "react";
+import { getPeaks } from "./peakCache";
+
 interface MiniWaveformProps {
+  url: string;
   active: boolean;
   playing: boolean;
   bars?: number;
 }
 
-// Deterministic pseudo-random bar heights so each row has a unique but stable shape
-const heights = (count: number) =>
+// Deterministic fallback shape used while real peaks are loading.
+const fallback = (count: number) =>
   Array.from({ length: count }, (_, i) => {
     const v = Math.sin(i * 12.9898) * 43758.5453;
-    return 0.35 + (v - Math.floor(v)) * 0.65; // 0.35 - 1.0
+    return 0.35 + (v - Math.floor(v)) * 0.65;
   });
 
-const MiniWaveform = ({ active, playing, bars = 28 }: MiniWaveformProps) => {
-  const data = heights(bars);
+const MiniWaveform = ({ url, active, playing, bars = 28 }: MiniWaveformProps) => {
+  const [peaks, setPeaks] = useState<number[]>(() => fallback(bars));
+
+  useEffect(() => {
+    let cancelled = false;
+    getPeaks(url, bars)
+      .then((p) => {
+        if (!cancelled && p.length) setPeaks(p);
+      })
+      .catch(() => {
+        // Keep the fallback on failure
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [url, bars]);
 
   return (
-    <div
-      className="flex h-6 w-full items-center gap-[2px]"
-      aria-hidden
-    >
-      {data.map((h, i) => (
+    <div className="flex h-6 w-full items-center gap-[2px]" aria-hidden>
+      {peaks.map((h, i) => (
         <span
           key={i}
           className={`w-[2px] rounded-full transition-colors ${

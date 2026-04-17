@@ -4,10 +4,8 @@ import artwork from "@/assets/beat-artwork.jpg";
 import { Slider } from "@/components/ui/slider";
 import { usePlayer } from "./PlayerContext";
 import Waveform from "./Waveform";
+import { PREVIEW_URL } from "./audio";
 
-// Placeholder preview audio (used for every beat until real URLs are wired up)
-const PREVIEW_URL =
-  "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=lofi-study-112191.mp3";
 
 const formatTime = (s: number) => {
   if (!isFinite(s)) return "0:00";

@@ -108,3 +108,14 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  @keyframes mini-wave {
+    0%, 100% { transform: scaleY(0.45); }
+    50%      { transform: scaleY(1); }
+  }
+  .mini-wave-bar {
+    transform-origin: center;
+    animation: mini-wave 1s ease-in-out infinite;
+  }
+}

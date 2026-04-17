@@ -4,6 +4,7 @@ import WaveSurfer from "wavesurfer.js";
 interface WaveformProps {
   url: string;
   isPlaying: boolean;
+  volume?: number; // 0..1
   onReady?: (duration: number) => void;
   onProgress?: (time: number) => void;
   onFinish?: () => void;

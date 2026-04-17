@@ -58,16 +58,19 @@ const BeatRow = ({ beat }: { beat: Beat }) => {
         </div>
       </div>
 
-      <div className="hidden flex-wrap gap-1.5 md:flex">
-        {beat.tags.map((t) => (
-          <a
-            key={t}
-            href="#"
-            className="rounded-full bg-tag px-3 py-1 text-xs text-tag-foreground transition hover:bg-secondary"
-          >
-            #{t}
-          </a>
-        ))}
+      <div className="hidden min-w-0 flex-col gap-2 md:flex">
+        <div className="flex flex-wrap gap-1.5">
+          {beat.tags.map((t) => (
+            <a
+              key={t}
+              href="#"
+              className="rounded-full bg-tag px-3 py-1 text-xs text-tag-foreground transition hover:bg-secondary"
+            >
+              #{t}
+            </a>
+          ))}
+        </div>
+        <MiniWaveform active={isActive} playing={showPause} />
       </div>
 
       <div className="flex items-center gap-2">

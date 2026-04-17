@@ -18,7 +18,7 @@ const hsl = (varName: string, alpha = 1) => {
   return alpha < 1 ? `hsla(${raw} / ${alpha})` : `hsl(${raw})`;
 };
 
-const Waveform = ({ url, isPlaying, onReady, onProgress, onFinish }: WaveformProps) => {
+const Waveform = ({ url, isPlaying, volume = 1, onReady, onProgress, onFinish }: WaveformProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const wsRef = useRef<WaveSurfer | null>(null);
 
@@ -41,7 +41,10 @@ const Waveform = ({ url, isPlaying, onReady, onProgress, onFinish }: WaveformPro
 
     wsRef.current = ws;
 
-    ws.on("ready", () => onReady?.(ws.getDuration()));
+    ws.on("ready", () => {
+      ws.setVolume(volume);
+      onReady?.(ws.getDuration());
+    });
     ws.on("audioprocess", (t) => onProgress?.(t));
     ws.on("seeking", (t) => onProgress?.(t));
     ws.on("finish", () => onFinish?.());

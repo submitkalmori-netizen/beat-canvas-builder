@@ -15,7 +15,7 @@ const Index = () => {
       />
       <div className="relative z-10">
         <Header />
-        <main className="mx-auto max-w-[1400px] px-6 py-10">
+        <main className="mx-auto max-w-[1400px] px-6 py-10 pb-32">
           <h1 className="sr-only">Browse Beats</h1>
 
           {/* Top utility row */}

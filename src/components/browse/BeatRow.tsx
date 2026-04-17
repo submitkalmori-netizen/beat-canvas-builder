@@ -1,5 +1,6 @@
-import { Play, ShoppingCart, MoreVertical, BadgeCheck } from "lucide-react";
+import { Play, Pause, ShoppingCart, MoreVertical, BadgeCheck } from "lucide-react";
 import artwork from "@/assets/beat-artwork.jpg";
+import { usePlayer } from "./PlayerContext";
 
 export interface Beat {
   title: string;
@@ -12,15 +13,31 @@ export interface Beat {
 }
 
 const BeatRow = ({ beat }: { beat: Beat }) => {
+  const { current, isPlaying, play, toggle } = usePlayer();
+  const isActive = current?.title === beat.title;
+  const showPause = isActive && isPlaying;
+
+  const handlePlay = () => {
+    if (isActive) toggle();
+    else play(beat);
+  };
+
   return (
     <div className="group grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg px-3 py-3 transition hover:bg-card/60 md:grid-cols-[auto_minmax(0,2fr)_minmax(0,1.3fr)_auto]">
       <div className="relative h-14 w-14 overflow-hidden rounded-md">
         <img src={artwork} alt={beat.title} className="h-full w-full object-cover" />
         <button
-          aria-label="Play"
-          className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition group-hover:opacity-100"
+          onClick={handlePlay}
+          aria-label={showPause ? "Pause" : "Play"}
+          className={`absolute inset-0 flex items-center justify-center bg-black/60 transition ${
+            isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          }`}
         >
-          <Play className="h-5 w-5 fill-foreground text-foreground" />
+          {showPause ? (
+            <Pause className="h-5 w-5 fill-foreground text-foreground" />
+          ) : (
+            <Play className="h-5 w-5 fill-foreground text-foreground" />
+          )}
         </button>
       </div>
 

@@ -1,5 +1,5 @@
-import { Play, Pause, SkipBack, SkipForward, Volume2, X, BadgeCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX, X, BadgeCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import artwork from "@/assets/beat-artwork.jpg";
 import { Slider } from "@/components/ui/slider";
 import { usePlayer } from "./PlayerContext";
@@ -21,6 +21,26 @@ const PlayerBar = () => {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(70);
+  const [muted, setMuted] = useState(false);
+  const lastVolumeRef = useRef(70);
+
+  const effectiveVolume = muted || volume === 0 ? 0 : volume / 100;
+  const isMuted = muted || volume === 0;
+
+  const toggleMute = () => {
+    if (isMuted) {
+      setMuted(false);
+      if (volume === 0) setVolume(lastVolumeRef.current || 70);
+    } else {
+      lastVolumeRef.current = volume;
+      setMuted(true);
+    }
+  };
+
+  const handleVolumeChange = (v: number) => {
+    setVolume(v);
+    if (v > 0 && muted) setMuted(false);
+  };
 
   useEffect(() => {
     setProgress(0);
@@ -68,6 +88,7 @@ const PlayerBar = () => {
               <Waveform
                 url={PREVIEW_URL}
                 isPlaying={isPlaying}
+                volume={effectiveVolume}
                 onReady={(d) => setDuration(d)}
                 onProgress={(t) => setProgress(t)}
                 onFinish={() => toggle()}
@@ -79,8 +100,20 @@ const PlayerBar = () => {
 
         {/* Volume + close */}
         <div className="hidden items-center gap-2 md:flex md:w-40">
-          <Volume2 className="h-4 w-4 text-muted-foreground" />
-          <Slider value={[volume]} max={100} step={1} onValueChange={(v) => setVolume(v[0])} />
+          <button
+            onClick={toggleMute}
+            aria-label={isMuted ? "Unmute" : "Mute"}
+            aria-pressed={isMuted}
+            className="text-muted-foreground transition hover:text-foreground"
+          >
+            {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>
+          <Slider
+            value={[isMuted ? 0 : volume]}
+            max={100}
+            step={1}
+            onValueChange={(v) => handleVolumeChange(v[0])}
+          />
         </div>
         <button
           onClick={stop}

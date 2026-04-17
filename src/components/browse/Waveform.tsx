@@ -68,6 +68,11 @@ const Waveform = ({ url, isPlaying, volume = 1, onReady, onProgress, onFinish }:
     }
   }, [isPlaying]);
 
+  // Sync volume changes
+  useEffect(() => {
+    wsRef.current?.setVolume(volume);
+  }, [volume]);
+
   return <div ref={containerRef} className="w-full" />;
 };
 

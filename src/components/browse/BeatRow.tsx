@@ -1,6 +1,7 @@
 import { Play, Pause, ShoppingCart, MoreVertical, BadgeCheck } from "lucide-react";
 import artwork from "@/assets/beat-artwork.jpg";
 import { usePlayer } from "./PlayerContext";
+import MiniWaveform from "./MiniWaveform";
 
 export interface Beat {
   title: string;
